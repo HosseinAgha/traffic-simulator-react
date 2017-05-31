@@ -34,10 +34,11 @@ module.exports =
   resolve: 
     alias: 
       '$el': path.resolve __dirname, 'src/helpers/createElement.ls'
+      '$assets': path.resolve __dirname, 'assets'
     
     extensions: ['.ls' '.js' '.jsx']
   
-  devtool: 'inline-source-map'
+  devtool: 'cheap-module-eval-source-map'
 
   module: 
     rules:
@@ -48,8 +49,11 @@ module.exports =
       * test: /\.ls$/
         loaders:
           'react-hot-loader/webpack'
-          'livescript-loader'
+          'livescript-loader?map=embedded'
         exclude: /node_modules/
+
+      * test: /\.css$/
+        loaders: ['style-loader', 'css-loader']
 
       * test: /\.styl$/
         loaders:
@@ -62,15 +66,18 @@ module.exports =
           * loader: 'stylus-loader'
         exclude: /node_modules/
 
+      * test: /\.svg$/
+        loaders: 
+          'babel-loader'
+          'react-svg-loader'
+        exclude: /node_modules/
+
   plugins:
     new webpack.HotModuleReplacementPlugin
     # enable HMR globally
 
     new webpack.NamedModulesPlugin
     # prints more readable module names in the browser console on HMR updates
-
-    new CaseSensitivePathsPlugin
-    # throws error when we write file name case wrong
 
     new WatchMissingNodeModulesPlugin
     # Don't need to rerun webpack on npm install

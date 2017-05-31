@@ -1,11 +1,12 @@
  require! {
   'react': { Component }:React
-  '$el': { el }
-  './Layout.ls'
-  './Counter.ls'
+  '$el': { el, elem }
+  './SimulationPage'
+  './setTapEventPlugin'
+  'material-ui/styles/MuiThemeProvider': MuiThemeProvider
  } 
-
+ 
 module.exports = class App extends Component
   render: ->
-    el Layout, null, children: 
-      el Counter
+    elem MuiThemeProvider.default, children:
+      el SimulationPage

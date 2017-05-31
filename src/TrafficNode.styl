@@ -1,0 +1,119 @@
+.container
+  position absolute
+
+.nodeContainer
+  position relative
+
+.road 
+  position absolute
+  top 0
+  left 0
+  width 18px
+  height 140px
+  background-color #222
+
+  &:after 
+    display block
+    content ' '
+    position relative
+    left calc(50% - 2px)
+    font-size 20px
+    width 0px
+    height calc(100% - 10px)
+    box-sizing border-box
+    margin 5px 0px
+    border none
+    border-left 3px dashed white
+
+  &.top
+    top auto
+    bottom 67px
+    left 30px
+
+  &.bottom
+    top 60px
+
+  &.left,&.right
+    width 200px
+    height 18px
+    &:after
+      border-left none
+      border-top 3px dashed white
+      width calc(100% - 10px)
+      height 0px
+      top calc(50% - 2px)
+      left auto
+      margin 0px 5px
+
+  &.left
+    right 57px
+    left auto
+    top 5px
+      
+  &.right
+    left 60px
+    bottom 5px
+    top auto
+
+.queue
+  position absolute
+  height 40px
+  width 40px
+
+  .left &
+    right 5px
+    top -34px
+  .right &
+    left 5px
+    top 16px
+  .top &
+    bottom 5px
+    left 30px
+  .bottom &
+    top 5px
+    left -50px
+
+.carIcon
+  display inline-block
+  .right &
+    transform rotateY(180deg)
+  .top &
+    transform rotateZ(90deg) translateY(16px)
+  .bottom &
+    transform rotateZ(-90deg) translateY(16px)
+
+.count
+  display inline-block
+  position relative
+  background-color #4CAF50
+  font-weight bold
+  padding 3px
+  border-radius 10px
+  color white
+  font-family Arial
+  font-size 12px
+
+  .right &
+    top -10px
+    left 10px
+  .left &
+    top -60px
+    left 10px
+  .top &
+    top -35px
+    left 20px
+  .bottom &
+    top -30px
+    right 4px
+
+.intersectionIcon
+  position relative
+  width 50px
+  transform-origin center center
+  transform rotateZ(90deg)
+  .verticalGreen &
+    transform rotateZ(0deg)
+
+
+.entranceIcon
+  width 50px

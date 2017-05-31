@@ -2,6 +2,7 @@ import { AppContainer } from 'react-hot-loader';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from '../App.ls';
+import '../helpers/setImmutableStuff';
 
 /*
   We use JSX here to only demonstrate that we support it ;)
