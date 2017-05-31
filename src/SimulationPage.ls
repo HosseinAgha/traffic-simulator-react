@@ -30,7 +30,7 @@ module.exports = class App extends Component
 
     initialCoeffs = 
       coeffs: imm do
-        speed: 0.05
+        speed: 0.25
         entryLambda: 2
         entryPeriod: 10
 
