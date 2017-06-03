@@ -10,7 +10,7 @@ module.exports = (oldTrafficImm, answer, coeffs) ->
   maxRowIndex = oldTraffic[0].length - 1
   maxColIndex = oldTraffic.length - 1
   totalMoves = 0
-  { entryLambda, entryPeriod } = coeffs
+  { entryLambda, entryPeriod, smartTrafficLights, timerResetNum, carPassPerIteration } = coeffs
 
   newTraffic = oldTrafficImm
   for row, i in oldTraffic
@@ -24,8 +24,8 @@ module.exports = (oldTrafficImm, answer, coeffs) ->
         newCount = newTraffic.getIn([queueToIncrease.i, queueToIncrease.j, pos]) + entriesCount
         newTraffic = newTraffic.setIn [queueToIncrease.i, queueToIncrease.j, pos], newCount
       else if isIntersection(i, j, maxRowIndex, maxColIndex)  # update intersections data
-        newTraffic = newTraffic.setIn [i, j, \greenlight], toggleGreenLight(node)
-        { newTraffic, numOfMoves } = moveCarsPassGreenLight(newTraffic, oldTraffic, i, j, 1)
+        newTraffic = newTraffic.setIn [i, j, \greenlight], toggleGreenLight(oldTraffic, node, smartTrafficLights, carPassPerIteration, timerResetNum)
+        { newTraffic, numOfMoves } = moveCarsPassGreenLight(newTraffic, oldTraffic, i, j, carPassPerIteration)
         totalMoves += numOfMoves
         newNodeState = newTraffic.getIn([i, j])
 
@@ -45,15 +45,23 @@ isGate = (i, j, maxRowIndex, maxColIndex) ->
   | (j is maxRowIndex and (i isnt 0) and (i < maxColIndex)) => { i, j: j - 1, pos: \right }
   | _ => null
 
-toggleGreenLight = (node, smartTimer) ->
-  timerValue = 20
-  
-  if node.greenlight.timer > 1
+toggleGreenLight = (traffic, node, smartTimer, carPassPerIteration, resetValue = 20) ->  
+  currentTimer = node.greenlight.timer
+  if smartTimer
+    if node.greenlight.dir is \vertical
+      maxTraffic = Math.max node.top, node.bottom
+    else
+      maxTraffic = Math.max node.left, node.right
+    iterationsToEmpty = Math.ceil(maxTraffic / carPassPerIteration)
+    if iterationsToEmpty < currentTimer
+      currentTimer = iterationsToEmpty + 1
+
+  if currentTimer > 1
     dir = node.greenlight.dir
-    timer = node.greenlight.timer - 1
+    timer = currentTimer - 1
   else
-    dir = if node.greenlight.dir is \horizontal then \vertical else \horizontal
-    timer = timerValue
+    dir = if node.greenlight.dir is \vertical then \horizontal else \vertical
+    timer = resetValue
 
   imm { timer, dir }
 

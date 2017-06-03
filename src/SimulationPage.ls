@@ -33,6 +33,9 @@ module.exports = class App extends Component
         speed: 0.25
         entryLambda: 2
         entryPeriod: 10
+        timerResetNum: 20      
+        carPassPerIteration: 1
+        smartTrafficLights: off  
 
     @state = 
       { ...initialCoeffs, ...@getInitialStateVariables! }
@@ -84,6 +87,7 @@ module.exports = class App extends Component
       @renderStartStopButton!
       @renderResetButton!
       @renderForwardBackwardButton!
+      @renderSpeedSwitch!
       @renderConfigStuff!
 
   renderStartStopButton: ->
@@ -111,6 +115,19 @@ module.exports = class App extends Component
       onClick: ~> @iterate!
     ]
 
+  renderSpeedSwitch: ->
+    elem SliderWithLabel,
+      label: "Speed (Tick Duration)"
+      min: 0
+      max: 1 - 0.01
+      step: 0.01
+      value: (1 - @state.coeffs.get(\speed))
+      labelValue: @state.coeffs.get(\speed).toPrecision(1) + "s"
+      disabled: @state.simulationRunning
+      onChange: (e, val) ~>
+        speed = @state.coeffs.get \speed 
+        @setState coeffs: @state.coeffs.set(\speed, (1 - val))
+
   renderConfigStuff: ->
     div css.configsContainer, children:
       el Toggle, [css.panelButton, on, css.addBorder, on],
@@ -125,25 +142,24 @@ module.exports = class App extends Component
         value:  @state.coeffs.get(\entryLambda)
         onChange: (val) ~> 
           @setState coeffs: @state.coeffs.set(\entryLambda, val)
-      
       elem NumberWithLabel,
-        min: 0
+        min: 1
         label: "Entry Poisson Period (s)"
         value:  @state.coeffs.get(\entryPeriod)
         onChange: (val) ~> 
           @setState coeffs: @state.coeffs.set(\entryPeriod, val)
-      
-      elem SliderWithLabel,
-        label: "Speed (Tick Duration)"
+      elem NumberWithLabel,
+        min: 2
+        label: "Lights Timer Reset Num"
+        value:  @state.coeffs.get(\timerResetNum)
+        onChange: (val) ~> 
+          @setState coeffs: @state.coeffs.set(\timerResetNum, val)
+      elem NumberWithLabel,
         min: 0
-        max: 1
-        step: 0.01
-        value: (1 - @state.coeffs.get(\speed))
-        labelValue: @state.coeffs.get(\speed).toPrecision(1) + "s"
-        disabled: @state.simulationRunning
-        onChange: (e, val) ~>
-          speed = @state.coeffs.get \speed 
-          @setState coeffs: @state.coeffs.set(\speed, (1 - val))
+        label: "Cars Pass Per Iteration"
+        value:  @state.coeffs.get(\carPassPerIteration)
+        onChange: (val) ~> 
+          @setState coeffs: @state.coeffs.set(\carPassPerIteration, val)
 
   startSimulation: ->
     @setState simulationRunning: yes
