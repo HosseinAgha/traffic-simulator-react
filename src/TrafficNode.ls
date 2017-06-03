@@ -21,8 +21,8 @@ module.exports = class TrafficNode extends Component
 
   renderNode: ->
     { node, entrance } = @props
-    verticalGreen = node.greenlight.dir is \vertical
-    div [css.nodeContainer, on, css.isEntrance, entrance, css.verticalGreen, verticalGreen], 
+    horizontalGreen = node.greenlight.dir is \horizontal
+    div [css.nodeContainer, on, css.isEntrance, entrance, css.horizontalGreen, horizontalGreen], 
       children:
         @renderIcon entrance
         [ \left \right \top \bottom ].map (direction) ~>

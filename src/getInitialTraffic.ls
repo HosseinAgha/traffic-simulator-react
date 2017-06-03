@@ -5,8 +5,7 @@ module.exports = (dim = 4) ->
     for y til dim
       { 
         greenlight: 
-          dir: \vertical
-          timer: 20
+          timer: 0
         right: 0 
         left: 0 
         top: 0 
